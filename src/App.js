@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import classes from  './App.css';
+import './App.css';
 import Person from './Person/Person'
-
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 class App extends Component {
 
   state = {
@@ -28,7 +28,7 @@ class App extends Component {
       ...this.state.persons[personIndex]
     }
 
-    person.name = event.target.value
+    person.name = event.input.value
     const persons = [...this.state.persons]
     persons[personIndex] = person;
 
@@ -45,48 +45,53 @@ class App extends Component {
 
   render() {
 
-
+    const style = {
+      backgroundColor: 'green',
+      color: 'white',
+      font: 'inherit',
+      border: '1px solid blue',
+      padding: '8px',
+      cursor: 'pointer'
+    };
 
     let persons = null;
-    let btnClass = '';
 
     if(this.state.showPersons){
       persons =  (
         
         <div>
             {this.state.persons.map((person, index) => {
-              return <Person click={() => this.deletePersonsHandler(index)}
+              return <ErrorBoundary key={person.id}>
+                <Person click={() => this.deletePersonsHandler(index)}
                 name={person.name}
                 age={person.age}
                 key={person.id}
                 changed={(event) => this.nameChangeHandler(event, person.id)}
-                />
+                /></ErrorBoundary>
             })}
         </div>
        );
 
-      btnClass = classes.Red
+       style.backgroundColor = 'red';
 
     }
 
-    let assignedClasses = [];
+    let classes = [];
 
     if (this.state.persons.length <= 2) {
-      assignedClasses.push(classes.red);
+      classes.push('red');
     }
 
     if(this.state.persons.length <= 1)
     {
-      assignedClasses.push(classes.bold);
+      classes.push('bold');
     }
 
     return (
-      <div className={classes.App}>
+      <div className="App">
         <h1>Dolly guaraná!</h1>
-        <p className={assignedClasses.join(' ')}>React é zika</p>
-        <button 
-        className={btnClass}
-        onClick={this.tooglePersonHandler}>Switch Name</button>
+        <p className={classes.join(' ')}>React é zika</p>
+        <button style={style} onClick={this.tooglePersonHandler}>Switch Name</button>
           
             {persons}
           
