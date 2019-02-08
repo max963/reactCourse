@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person'
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
+import classes from './App.css';
+import Persons from '../components/Persons/Persons'
+import Cockpit from '../components/Cockpit/Cockpit'
+
 class App extends Component {
 
   state = {
@@ -28,7 +29,7 @@ class App extends Component {
       ...this.state.persons[personIndex]
     }
 
-    person.name = event.input.value
+    person.name = event.target.value
     const persons = [...this.state.persons]
     persons[personIndex] = person;
 
@@ -57,44 +58,21 @@ class App extends Component {
     let persons = null;
 
     if(this.state.showPersons){
-      persons =  (
-        
-        <div>
-            {this.state.persons.map((person, index) => {
-              return <ErrorBoundary key={person.id}>
-                <Person click={() => this.deletePersonsHandler(index)}
-                name={person.name}
-                age={person.age}
-                key={person.id}
-                changed={(event) => this.nameChangeHandler(event, person.id)}
-                /></ErrorBoundary>
-            })}
-        </div>
-       );
+      persons =  <Persons
+            persons={this.state.persons}
+            clicked={this.deletePersonsHandler}
+            changed={this.nameChangeHandler} 
+          />;
 
-       style.backgroundColor = 'red';
-
-    }
-
-    let classes = [];
-
-    if (this.state.persons.length <= 2) {
-      classes.push('red');
-    }
-
-    if(this.state.persons.length <= 1)
-    {
-      classes.push('bold');
     }
 
     return (
-      <div className="App">
-        <h1>Dolly guaraná!</h1>
-        <p className={classes.join(' ')}>React é zika</p>
-        <button style={style} onClick={this.tooglePersonHandler}>Switch Name</button>
-          
-            {persons}
-          
+      <div className={classes.App}>
+        <Cockpit 
+          showPersons={this.state.showPersons}
+          persons={this.state.persons} 
+          clicked={this.tooglePersonHandler} />
+        {persons}
       </div>
     );
   }
